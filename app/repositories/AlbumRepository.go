@@ -6,9 +6,11 @@ import (
     "github.com/abhishekr7/ganga/app/models"
 )
 
-func (repository *AlbumRepository) getAlbumsByArtist(name string) ([]Album, error) {
+var db *sql.DB
+
+func getAlbumsByArtist(name string) ([] models.AlbumModel, error) {
     
-    var albums []Album
+    var albums []models.AlbumModel
 
     rows, err := db.Query("SELECT * FROM album WHERE artist = ?", name)
     if err != nil {
@@ -17,7 +19,7 @@ func (repository *AlbumRepository) getAlbumsByArtist(name string) ([]Album, erro
     defer rows.Close()
     
     for rows.Next() {
-        var alb Album
+        var alb models.AlbumModel
         if err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
             return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
         }
@@ -29,9 +31,9 @@ func (repository *AlbumRepository) getAlbumsByArtist(name string) ([]Album, erro
     return albums, nil
 }
 
-func getAlbumByID(id int64) (Album, error) {
+func getAlbumByID(id int64) (models.AlbumModel, error) {
     
-    var alb Album
+    var alb models.AlbumModel
 
     row := db.QueryRow("SELECT * FROM album WHERE id = ?", id)
     if err := row.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
@@ -43,7 +45,7 @@ func getAlbumByID(id int64) (Album, error) {
     return alb, nil
 }
 
-func addAlbum(alb Album) (int64, error) {
+func addAlbum(alb models.AlbumModel) (int64, error) {
     result, err := db.Exec("INSERT INTO album (title, artist, price) VALUES (?, ?, ?)", alb.Title, alb.Artist, alb.Price)
     if err != nil {
         return 0, fmt.Errorf("addAlbum: %v", err)
