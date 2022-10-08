@@ -1,0 +1,8 @@
+package models
+
+type AlbumModel struct {
+    ID     int64
+    Title  string
+    Artist string
+    Price  float32
+}
