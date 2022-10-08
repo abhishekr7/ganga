@@ -4,10 +4,12 @@ import (
     "database/sql"
     "fmt"
     "github.com/abhishekr7/ganga/app/models"
-    "github.com/abhishekr7/ganga/app/interfaces"
 )
 
 var db *sql.DB
+
+type AlbumRepository struct {
+}
 
 func (repository *AlbumRepository) getAlbumsByArtist(name string) ([]models.AlbumModel, error) {
     
